@@ -1,0 +1,41 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+  GDB online is an online compiler and debugger tool for C, C++, Python, PHP, Ruby, 
+  C#, OCaml, VB, Perl, Swift, Prolog, Javascript, Pascal, COBOL, HTML, CSS, JS
+  Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+// The data and the top-level flow. All the work happens in analyzer.cpp.
+ 
+#include <iostream>
+#include "analyzer.h" //struct, aliases and my function prototypes live here
+int main() {
+	//my delivery log, one line per order
+	//format: date,hour,zone,restaurant,payout,km,wait_min,total_min
+	std::string csvData =
+"2026-07-06,18,downtown,PizzaPlace,12.50,6.2,4,26\n"
+"2026-07-06,19,downtown,BurgerBarn,9.75,4.1,3,19\n"
+"2026-07-06,19,westside,SushiSpot,15.00,9.8,12,41\n"
+"2026-07-07,12,downtown,PizzaPlace,8.25,3.0,5,18\n"
+"2026-07-07,12,campus,WokBox,7.50,2.2,2,14\n"
+"2026-07-07,13,campus,WokBox,8.00,2.5,3,15\n"
+"2026-07-08,18,westside,SushiSpot,13.50,8.5,14,44\n"
+"2026-07-08,19,downtown,BurgerBarn,11.00,5.0,2,21\n"
+"2026-07-09,20,downtown,PizzaPlace,14.00,7.1,6,30\n"
+"2026-07-09,12,campus,WokBox,6.75,1.9,2,12\n"
+"2026-07-10,18,westside,SushiSpot,16.25,10.2,11,46\n"
+"2026-07-10,19,downtown,BurgerBarn,10.50,4.6,3,20\n";
+	DeliveryLog log = parseDeliveries(csvData); //turn the text into structs
+	//log cannot be empty, otherwise nothing to analyze
+	if (log.empty()) {
+		std::cout << "Error: no deliveries loaded!\n";
+		return 1; //exit with error
+	}
+	std::cout << "Loaded " << log.size() << " deliveries\n";
+	//run the three reports, each one groups the same log a different way
+	printReport("Earnings per hour, by zone", earningsPerHourBy(log, "zone"));
+	printReport("Earnings per hour, by time of day", earningsPerHourBy(log, "hour"));
+	printReport("Earnings per hour, by restaurant", earningsPerHourBy(log, "restaurant"));
+	return 0;
+}
